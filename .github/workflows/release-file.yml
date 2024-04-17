@@ -50,8 +50,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - run: bun install
-      - run: bun tools
-      - run: bun make:exe
+      - run: bun make
       - name: Compress action step
         uses: a7ul/tar-action@v1.1.3
         id: compress
@@ -83,8 +82,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - run: bun install
-      - run: bun tools
-      - run: bun make:exe
+      - run: bun make
       - name: create sample script
         run: |
           mkdir -p .debpkg/usr/bin
