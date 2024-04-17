@@ -27,10 +27,32 @@ type Talk = {
   hates: number;
 };
 
+const splitString = (str: string, n: number): string[] => {
+  let arr = str?.split(" ");
+  let result = [];
+  let subStr = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    let word = arr[i];
+    if (subStr.length + word.length + 1 <= n) {
+      subStr = subStr + " " + word;
+    } else {
+      result.push(subStr);
+      subStr = word;
+    }
+  }
+  if (subStr.length) {
+    result.push(subStr);
+  }
+  return result;
+};
+
 const argv = Bun.argv;
 
 if (argv.length > 2) {
   const file = argv[2];
+
+  let titleSize: number = 100;
+  if (argv.length > 3) titleSize = Number(argv[3]) || 100;
 
   const { talks, speakers, formats } = await Bun.file(file).json();
   const formatsHash = new Map<string, string>();
@@ -50,12 +72,10 @@ if (argv.length > 2) {
           position: number
         ) => {
           const lines: TalkRow[] = [];
-          let titleSplit: string[] = (
-            title
-              .trim()
-              .replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "")
-              .match(/.{1,100}/g) as string[]
-          ).map((text) => text.padEnd(100, " "));
+          let titleSplit: string[] = splitString(
+            title.replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "").trim(),
+            titleSize
+          ).map((text) => text.padEnd(titleSize, " "));
           speakers.forEach((uid: string, i: number) => {
             if (i === 0)
               lines.push({
@@ -80,5 +100,5 @@ if (argv.length > 2) {
       )
   );
 } else {
-  console.log("Usage: coc <file>");
+  console.log("Usage: coc <file> <title_size>");
 }
