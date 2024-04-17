@@ -50,21 +50,30 @@ if (argv.length > 2) {
           position: number
         ) => {
           const lines: TalkRow[] = [];
+          let titleSplit: string[] = (
+            title
+              .trim()
+              .replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "")
+              .match(/.{1,100}/g) as string[]
+          ).map((text) => text.padEnd(100, " "));
           speakers.forEach((uid: string, i: number) => {
             if (i === 0)
               lines.push({
                 position: position + 1,
-                title: title
-                  .replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "")
-                  .trim(),
+                title: titleSplit.shift(),
                 format: formatsHash.get(formats),
                 speakers: speakerHash.get(uid),
                 rating: Number(rating.toFixed(2)),
                 loves,
                 hates,
               });
-            else lines.push({ speakers: speakerHash.get(uid) });
+            else
+              lines.push({
+                title: titleSplit.shift() ?? "",
+                speakers: speakerHash.get(uid),
+              });
           });
+          titleSplit.forEach((title) => lines.push({ title }));
           lines.push({});
           return lines;
         }
