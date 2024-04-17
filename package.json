@@ -1,0 +1,17 @@
+{
+  "name": "conferencehall-orga-classment",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "bin": {
+    "coc": "./bin/index.js"
+  },
+  "scripts": {
+    "make": "bun build index.ts --outfile exe/coc --compile --minify --sourcemap=none"
+  }
+}
