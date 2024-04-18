@@ -1,6 +1,6 @@
 # CHOC
 
-ConferenceHall organization companion
+ConferenceHall Organization Companion
 
 This tool takes your export.json and display a table into your terminal with the talks, speakers, ratings, ...
 
