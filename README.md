@@ -2,6 +2,10 @@
 
 ConferenceHall organization companion
 
+This tool takes your export.json and display a table into your terminal with the talks, speakers, ratings, ...
+
+You can export into a TSV file too!
+
 ## Installation
 
 ```
