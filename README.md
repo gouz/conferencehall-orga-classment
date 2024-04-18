@@ -14,6 +14,8 @@ brew install gouz/tools/choc
 
 ## Usage
 
+Export a json of your proposal: ![export json on conference-hall.io](assets/exportjson.png)
+
 ```
 Usage: choc [options] <json>
 
@@ -34,3 +36,19 @@ Options:
   -x, --export <file>      export into tsv file
   -h, --help               display help for command
 ```
+
+### Default usage
+
+```
+choc export.json
+```
+
+![alt text](assets/default.png)
+
+### With options
+
+```
+choc -fce export.json
+```
+
+![alt text](assets/options.png)
