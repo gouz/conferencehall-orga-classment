@@ -8,9 +8,15 @@ You can export into a TSV file too!
 
 ## Installation
 
+### On MacOS
+
 ```
 brew install gouz/tools/choc
 ```
+
+### Other
+
+In release, you can find a .deb or a ubuntu gzipped file.
 
 ## Usage
 
