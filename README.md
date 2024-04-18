@@ -22,7 +22,9 @@ In release, you can find a .deb or a ubuntu gzipped file.
 
 Export a json of your proposal: ![export json on conference-hall.io](assets/export-json.png)
 
-```
+```sh
+choc -v
+
 Usage: choc [options] <json>
 
 ConferenceHall organization companion
@@ -45,7 +47,7 @@ Options:
 
 ### Default usage
 
-```
+```sh
 choc export.json
 ```
 
@@ -53,7 +55,7 @@ choc export.json
 
 ### With options
 
-```
+```sh
 choc -fce export.json
 ```
 
