@@ -18,14 +18,21 @@ export type Speaker = {
   uid: string;
   displayName: string;
   company: string;
+  address: Address;
 };
 
 export type SpeakerData = {
   name: string;
   company: string;
+  address: string;
 };
 
+export type Address {
+  formattedAddress: string;
+}
+
 export type Talk = {
+  id: string;
   title: string;
   speakers: string[];
   formats: string;
@@ -41,6 +48,8 @@ export type Options = {
   withCompanies: boolean;
   withFormats: boolean;
   withLanguages: boolean;
+  withAddresses: boolean;
   titlelength: number;
+  links: string;
   export?: string;
 };

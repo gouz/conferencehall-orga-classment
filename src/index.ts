@@ -21,8 +21,10 @@ program
   .option("-c, --with-categories", "view categories", false)
   .option("-f, --with-formats", "view formats", false)
   .option("-e, --with-companies", "view speakers company", false)
+  .option("-a, --with-addresses", "view speakers address", false)
   .option("-l, --with-languages", "view talks language", false)
   .option("-t, --titlelength <int>", "the title length", myParseInt, 100)
+  .option("-w, --links <eventId>", "view links")
   .option("-x, --export <file>", "export into tsv file")
   .action(choc);
 

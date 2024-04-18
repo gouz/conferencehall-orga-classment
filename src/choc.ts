@@ -16,10 +16,11 @@ const choc = async (file: string, options: Options) => {
     formatsHash.set(id, removeEmojis(name));
   });
   const speakerHash = new Map<string, SpeakerData>();
-  (speakers as Speaker[]).forEach(({ uid, displayName, company }) => {
+  (speakers as Speaker[]).forEach(({ uid, displayName, company, address }) => {
     speakerHash.set(uid, {
       name: removeEmojis(displayName),
       company: removeEmojis(company ?? ""),
+      address: removeEmojis(address?.formattedAddress ?? ""),
     });
   });
   const categoriesHash = new Map<string, string>();

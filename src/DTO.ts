@@ -10,7 +10,17 @@ export const DTO = (
 ): TalkRow[] =>
   talks.flatMap(
     (
-      { title, speakers, formats, categories, rating, loves, hates, language },
+      {
+        id,
+        title,
+        speakers,
+        formats,
+        categories,
+        rating,
+        loves,
+        hates,
+        language,
+      },
       position: number
     ) => {
       const lines: TalkRow[] = [];
@@ -23,6 +33,11 @@ export const DTO = (
         if (options.withCompanies)
           addCompanies = {
             company: speakerHash.get(uid)?.company,
+          };
+        let addAddresses = {};
+        if (options.withAddresses)
+          addAddresses = {
+            addresses: speakerHash.get(uid)?.address,
           };
         if (i === 0) {
           const line = {
@@ -44,22 +59,31 @@ export const DTO = (
             addLanguages = {
               language: language,
             };
+          let addLink = {};
+          if (options.links) {
+            addLink = {
+              link: `https://conference-hall.io/organizer/event/${options.links}/proposals/${id}`,
+            };
+          }
           lines.push({
             ...line,
             ...addFormats,
             ...addCategories,
             speakers: speakerHash.get(uid)?.name,
             ...addCompanies,
+            ...addAddresses,
             ...addLanguages,
             rating: Number(Number(rating ?? "0").toFixed(2)),
             loves,
             hates,
+            ...addLink,
           });
         } else
           lines.push({
             title: titleSplit.shift() ?? "",
             speakers: speakerHash.get(uid)?.name,
             ...addCompanies,
+            ...addAddresses,
           });
       });
       titleSplit.forEach((title) => lines.push({ title }));
@@ -106,6 +130,19 @@ export const DTOExport = (
             .map((uid: string) => speakerHash.get(uid)?.company)
             .join(", "),
         };
+      let addAddresses = {};
+      if (options.withAddresses)
+        addAddresses = {
+          address: speakers
+            .map((uid: string) => speakerHash.get(uid)?.address)
+            .join(", "),
+        };
+      let addLink = {};
+      if (options.links) {
+        addLink = {
+          link: `https://conference-hall.io/organizer/event/${options.links}/proposals/${id}`,
+        };
+      }
       return {
         ...line,
         ...addFormats,
@@ -114,10 +151,12 @@ export const DTOExport = (
           .map((uid: string) => speakerHash.get(uid)?.name)
           .join(", "),
         ...addCompanies,
+        ...addAddresses,
         ...addLanguages,
         rating: Number(Number(rating ?? "0").toFixed(2)),
         loves,
         hates,
+        ...addLink,
       };
     }
   );
