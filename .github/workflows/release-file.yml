@@ -58,13 +58,13 @@ jobs:
           command: c
           files: |
             ./exe
-          outPath: coc.tar.gz
+          outPath: choc.tar.gz
       - name: Run Linux Build
         if: matrix.os == 'ubuntu-latest'
-        run: cat ./coc.tar.gz > release_ubuntu.tar.gz
+        run: cat ./choc.tar.gz > release_ubuntu.tar.gz
       - name: Run Mac Build
         if: matrix.os == 'macos-latest'
-        run: cat ./coc.tar.gz > release_mac.tar.gz
+        run: cat ./choc.tar.gz > release_mac.tar.gz
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
@@ -90,7 +90,7 @@ jobs:
       - name: build-deb-action
         uses: jiro4989/build-deb-action@v3
         with:
-          package: "coc"
+          package: "choc"
           desc: "ConferenceHall analyzer"
           arch: "amd64"
           package_root: ".debpkg"
@@ -102,4 +102,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ needs.create_release.outputs.tag-name }}
-          files: coc_${{ github.ref_name }}_amd64.deb
+          files: choc_${{ github.ref_name }}_amd64.deb

@@ -23,6 +23,7 @@ program
   .option("-e, --with-companies", "view speakers company", false)
   .option("-l, --with-languages", "view talks language", false)
   .option("-t, --titlelength <int>", "the title length", myParseInt, 100)
+  .option("-x, --export <file>", "export into csv")
   .action(choc);
 
 program.parse();

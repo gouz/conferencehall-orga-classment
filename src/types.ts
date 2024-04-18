@@ -42,4 +42,5 @@ export type Options = {
   withFormats: boolean;
   withLanguages: boolean;
   titlelength: number;
+  export?: string;
 };
