@@ -101,7 +101,17 @@ export const DTOExport = (
 ): TalkRow[] =>
   talks.flatMap(
     (
-      { title, speakers, formats, categories, rating, loves, hates, language },
+      {
+        title,
+        speakers,
+        formats,
+        categories,
+        rating,
+        loves,
+        hates,
+        language,
+        id,
+      },
       position: number
     ) => {
       const line = {
