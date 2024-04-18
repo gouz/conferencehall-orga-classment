@@ -92,6 +92,11 @@ export const DTO = (
     }
   );
 
+const cleanArray = (arrayString: (string | undefined)[]): string[] =>
+  Array.from(
+    new Set(arrayString.map((c) => c?.toLowerCase() || "").filter((c) => c))
+  ).sort();
+
 export const DTOExport = (
   talks: Talk[],
   options: Options,
@@ -136,16 +141,16 @@ export const DTOExport = (
       let addCompanies = {};
       if (options.withCompanies)
         addCompanies = {
-          company: speakers
-            .map((uid: string) => speakerHash.get(uid)?.company)
-            .join(", "),
+          company: cleanArray(
+            speakers.map((uid: string) => speakerHash.get(uid)?.company)
+          ).join(", "),
         };
       let addAddresses = {};
       if (options.withAddresses)
         addAddresses = {
-          address: speakers
-            .map((uid: string) => speakerHash.get(uid)?.address)
-            .join(", "),
+          address: cleanArray(
+            speakers.map((uid: string) => speakerHash.get(uid)?.address)
+          ),
         };
       let addLink = {};
       if (options.links) {
