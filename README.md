@@ -2,6 +2,14 @@
 
 ConferenceHall organization companion
 
+## Installation
+
+```
+brew install gouz/tools/choc
+```
+
+## Usage
+
 ```
 Usage: choc [options] <json>
 
