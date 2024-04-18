@@ -51,7 +51,7 @@ export const DTO = (
             speakers: speakerHash.get(uid)?.name,
             ...addCompanies,
             ...addLanguages,
-            rating: Number((rating ?? "0").toFixed(2)),
+            rating: Number(Number(rating ?? "0").toFixed(2)),
             loves,
             hates,
           });
@@ -115,7 +115,7 @@ export const DTOExport = (
           .join(", "),
         ...addCompanies,
         ...addLanguages,
-        rating: Number((rating ?? "0").toFixed(2)),
+        rating: Number(Number(rating ?? "0").toFixed(2)),
         loves,
         hates,
       };
