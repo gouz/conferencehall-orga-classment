@@ -25,5 +25,6 @@ Options:
   -e, --with-companies     view speakers company (default: false)
   -l, --with-languages     view talks language (default: false)
   -t, --titlelength <int>  the title length (default: 100)
+  -x, --export <file>      export into tsv file
   -h, --help               display help for command
 ```
