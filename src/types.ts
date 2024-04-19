@@ -50,6 +50,7 @@ export type Options = {
   withLanguages: boolean;
   withAddresses: boolean;
   titlelength: number;
-  links: string;
+  render: boolean;
+  links?: string;
   export?: string;
 };

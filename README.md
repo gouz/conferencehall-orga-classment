@@ -20,7 +20,7 @@ In release, you can find a .deb or a ubuntu gzipped file.
 
 ## Usage
 
-Export a json of your proposal: 
+Export a json of your proposal:
 
 ![export json on conference-hall.io](assets/export-json.png)
 
@@ -44,6 +44,7 @@ Options:
   -t, --titlelength <int>  the title length (default: 100)
   -w, --links <eventId>    view links
   -x, --export <file>      export into tsv file
+  -r, --render             render on a webpage (default: false)
   -h, --help               display help for command
 ```
 

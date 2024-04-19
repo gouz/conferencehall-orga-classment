@@ -26,6 +26,7 @@ program
   .option("-t, --titlelength <int>", "the title length", myParseInt, 100)
   .option("-w, --links <eventId>", "view links")
   .option("-x, --export <file>", "export into tsv file")
+  .option("-r, --render", "render on a webpage", false)
   .action(choc);
 
 program.parse();

@@ -1,0 +1,141 @@
+function slugify(str) {
+  return str
+    .toString()
+    .normalize("NFD") // split an accented letter in the base letter and the acent
+    .replace(/[\u0300-\u036f]/g, "") // remove all previously split accents
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9 .]/g, "") // remove all chars not letters, numbers and spaces (to be replaced)
+    .replace(/\s+/g, "-");
+}
+
+const converter = new showdown.Converter();
+
+const linkIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+</svg>`;
+
+const lovesIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+</svg>`;
+
+const hatesIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+</svg>`;
+
+const ratingIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+</svg>`;
+
+document.querySelector("h1").innerText = exportJSON.name;
+
+const datas = {
+  categories: exportJSON.categories,
+  formats: exportJSON.formats,
+  speakers: [],
+  companies: [],
+};
+
+const speakers = {};
+
+exportJSON.speakers.forEach((speaker) => {
+  datas.speakers.push({
+    id: speaker.uid,
+    name: speaker.displayName,
+  });
+  datas.companies.push({
+    id: slugify(speaker.company?.trim() || ""),
+    name: speaker.company?.trim() || "",
+  });
+  speakers[speaker.uid] = speaker;
+});
+
+const categories = datas.categories.reduce(
+  (acc, obj) => ({ ...acc, [obj.id]: obj }),
+  {}
+);
+
+const formats = datas.formats.reduce(
+  (acc, obj) => ({ ...acc, [obj.id]: obj }),
+  {}
+);
+
+["categories", "formats", "speakers", "companies"].forEach((key) => {
+  document.getElementById(key).innerHTML = [
+    "<option></option>",
+    Object.values(
+      datas[key].reduce((acc, obj) => ({ ...acc, [obj.id]: obj }), {})
+    )
+      .sort((a, b) => (a.name < b.name ? -1 : 1))
+      .filter(({ name }) => name.trim() !== "")
+      .map(({ id, name }) => `<option value="${id}">${name}</option>`)
+      .join(""),
+  ].join("");
+});
+
+const joliSpeaker = (speaker) => `
+<div class="speaker">
+    <img src="${speaker.photoURL}">
+    <h4>${speaker.displayName}</h4>
+    ${speaker.company ? `<h5>${speaker.company}</h5>` : ""}
+</div>
+`;
+
+document.getElementById("talks").innerHTML = exportJSON.talks
+  .sort((a, b) => (a.rating <= b.rating ? 1 : -1))
+  .map(
+    (talk) => `
+  <article data-categories=" ${talk.categories} " data-formats=" ${
+      talk.formats
+    } " data-speakers=" ${talk.speakers.join(
+      " "
+    )} " data-companies=" ${talk.speakers
+      .map((s) => slugify(speakers[s].company ?? ""))
+      .join(" ")} ">
+    <header>
+        ${
+          options.links
+            ? `<a href="${`https://conference-hall.io/organizer/event/${options.links}/proposals/${talk.id}`}">${linkIcon}</a>`
+            : ""
+        }
+        <h3>${talk.title}</h3>
+    </header>
+    <div class="talk">
+        <div class="abstract">${converter.makeHtml(talk.abstract)}</div>
+        <div class="speakers">
+            ${talk.speakers
+              .map((speaker) => joliSpeaker(speakers[speaker]))
+              .join("")}
+        </div>
+    </div>
+    <footer>
+        <span class="category">${categories[talk.categories].name}</span>
+        <span class="format">${formats[talk.formats].name}</span>
+        ${talk.language ? `<span class="language">${talk.language}</span>` : ""}
+        ${talk.level ? `<span class="level">${talk.level}</span>` : ""}
+        <div>
+            <span>${ratingIcon}: ${talk.rating?.toFixed(2) ?? "-"}</span>
+            <span>${lovesIcon}: ${talk.loves ?? "0"}</span>
+            <span>${hatesIcon}: ${talk.hates ?? "0"}</span>
+        </div>
+    </footer>
+  </article>
+  `
+  )
+  .join("");
+
+window.filterTalks = () => {
+  const articles = document.querySelectorAll("article");
+  articles.forEach((article) => {
+    article.classList.remove("hidden");
+  });
+
+  ["categories", "formats", "speakers", "companies"].forEach((key) => {
+    const choice = document.getElementById(key).value.trim();
+    if (choice !== "")
+      articles.forEach((article) => {
+        if (article.getAttribute(`data-${key}`).indexOf(` ${choice} `) === -1)
+          article.classList.add("hidden");
+      });
+  });
+};
