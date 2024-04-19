@@ -63,3 +63,28 @@ choc -fce export.json
 ```
 
 ![alt text](assets/options.png)
+
+### Export to a tsv file 
+
+Then you can import it into a spreadsheet
+
+```sh
+choc export.json -x export.tsv
+```
+
+### Web mode
+
+**choc** is built with a webserver inside to transform you json into a nice webpage with filters.
+
+```
+choc export.json -r
+```
+
+You can add links to the talks with the `-w, --links`.
+
+You need to write your event id, present in the URL in conference-hall.io .
+
+```
+choc export.json -rw 688i5iout
+```
+
