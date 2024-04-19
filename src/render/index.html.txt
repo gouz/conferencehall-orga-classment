@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="main.css" />
+    <title>CHoC</title>
+    <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <h1></h1>
+      <aside class="grid container">
+        <label>
+          Categories:
+          <select id="categories" onchange="window.filterTalks()"></select>
+        </label>
+        <label>
+          Formats:
+          <select id="formats" onchange="window.filterTalks()"></select>
+        </label>
+        <label>
+          Speakers:
+          <select id="speakers" onchange="window.filterTalks()"></select>
+        </label>
+        <label>
+          Companies:
+          <select id="companies" onchange="window.filterTalks()"></select>
+        </label>
+      </aside>
+      <h2>Talks</h2>
+      <section id="talks"></section>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+svg {
+  width: 24px;
+  height: 24px;
+}
+
+header a {
+  float: right;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+
+  .category,
+  .format,
+  .language,
+  .level {
+    font-style: normal;
+    list-style-type: none;
+    color: white;
+    border-radius: 1rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0.15rem;
+    font-size: 0.75rem;
+    background-color: rgb(59 183 143 / 1);
+    text-wrap: nowrap;
+  }
+
+  .language,
+  .level {
+    background-color: rgb(242 223 13 / 1);
+    color: black;
+  }
+
+  div {
+    flex-grow: 1;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+    span {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.talk {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  .abstract {
+    flex-grow: 1;
+  }
+
+  .speakers {
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid var(--pico-card-border-color);
+    display: flex;
+    flex-direction: column;
+    width: 120px;
+
+    .speaker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+
+      img {
+        width: 96px;
+        border-radius: 50%;
+      }
+      h4,
+      h5 {
+        margin-bottom: 0;
+        font-size: 0.7rem;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
