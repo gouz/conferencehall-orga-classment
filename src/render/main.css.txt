@@ -60,6 +60,7 @@ footer {
     display: flex;
     flex-direction: column;
     width: 120px;
+    min-width: 120px;
 
     .speaker {
       display: flex;
