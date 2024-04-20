@@ -8,7 +8,6 @@ import type {
   Talk,
   TalkRow,
 } from "./types";
-import { removeEmojis } from "./utils";
 
 const choc = async (file: string, options: Options) => {
   const json = await Bun.file(file).json();
@@ -18,21 +17,21 @@ const choc = async (file: string, options: Options) => {
     const { talks, speakers, formats, categories } = json;
     const formatsHash = new Map<string, string>();
     (formats as Format[]).forEach(({ id, name }) => {
-      formatsHash.set(id, removeEmojis(name));
+      formatsHash.set(id, name);
     });
     const speakerHash = new Map<string, SpeakerData>();
     (speakers as Speaker[]).forEach(
       ({ uid, displayName, company, address }) => {
         speakerHash.set(uid, {
-          name: removeEmojis(displayName),
-          company: removeEmojis(company ?? ""),
-          address: removeEmojis(address?.formattedAddress ?? ""),
+          name: displayName,
+          company: company ?? "",
+          address: address?.formattedAddress ?? "",
         });
       }
     );
     const categoriesHash = new Map<string, string>();
     (categories as Format[]).forEach(({ id, name }) => {
-      categoriesHash.set(id, removeEmojis(name));
+      categoriesHash.set(id, name);
     });
     const talksLines = (talks as Talk[]).sort((a, b) =>
       a.rating <= b.rating ? 1 : -1

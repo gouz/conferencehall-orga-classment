@@ -47,12 +47,12 @@ export const DTO = (
           let addFormats = {};
           if (options.withFormats)
             addFormats = {
-              format: formatsHash.get(formats),
+              format: removeEmojis(formatsHash.get(formats)),
             };
           let addCategories = {};
           if (options.withCategories)
             addCategories = {
-              categories: categoriesHash.get(categories),
+              categories: removeEmojis(categoriesHash.get(categories)),
             };
           let addLanguages = {};
           if (options.withLanguages)
