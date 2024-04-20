@@ -17,7 +17,7 @@ program
   .version(packagejson.version, "-v, --version");
 
 program
-  .argument("<json>", "the json export file")
+  .argument("<json>", "the json export file from Conference Hall")
   .option("-c, --with-categories", "view categories", false)
   .option("-f, --with-formats", "view formats", false)
   .option("-e, --with-companies", "view speakers company", false)

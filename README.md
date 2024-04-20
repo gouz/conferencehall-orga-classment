@@ -10,6 +10,13 @@ You can export into a TSV file too!
 
 ### On MacOS
 
+Requirement: install xcode-select
+
+```
+xcode-select --install
+```
+
+Then install the main package
 ```
 brew install gouz/tools/choc
 ```
