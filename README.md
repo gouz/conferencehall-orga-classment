@@ -10,7 +10,7 @@ You can export into a TSV file too!
 
 ### On MacOS
 
-Requirement install xcode-select:
+Requirement: install xcode-select
 
 ```
 xcode-select --install
