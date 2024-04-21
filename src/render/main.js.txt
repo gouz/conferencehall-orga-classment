@@ -62,7 +62,7 @@ const formats = datas.formats.reduce(
 
 ["categories", "formats", "speakers", "companies"].forEach((key) => {
   document.getElementById(key).innerHTML = [
-    "<option></option>",
+    `<option value="">All ${key}</option>`,
     Object.values(
       datas[key].reduce((acc, obj) => ({ ...acc, [obj.id]: obj }), {})
     )
@@ -81,17 +81,14 @@ const joliSpeaker = (speaker) => `
 </div>
 `;
 
-document.getElementById("talks").innerHTML = exportJSON.talks
-  .sort((a, b) => (a.rating <= b.rating ? 1 : -1))
-  .map(
-    (talk) => `
-  <article data-categories=" ${talk.categories} " data-formats=" ${
-      talk.formats
-    } " data-speakers=" ${talk.speakers.join(
-      " "
-    )} " data-companies=" ${talk.speakers
-      .map((s) => slugify(speakers[s].company ?? ""))
-      .join(" ")} ">
+const joliTalk = (talk) => `
+  <article class="talk" data-categories=" ${talk.categories} " data-formats=" ${
+  talk.formats
+} " data-speakers=" ${talk.speakers.join(
+  " "
+)} " data-companies=" ${talk.speakers
+  .map((s) => slugify(speakers[s].company ?? ""))
+  .join(" ")} ">
     <header>
         ${
           options.links
@@ -100,7 +97,7 @@ document.getElementById("talks").innerHTML = exportJSON.talks
         }
         <h3>${talk.title}</h3>
     </header>
-    <div class="talk">
+    <div class="info">
         <div class="abstract">${converter.makeHtml(talk.abstract)}</div>
         <div class="speakers">
             ${talk.speakers
@@ -120,12 +117,84 @@ document.getElementById("talks").innerHTML = exportJSON.talks
         </div>
     </footer>
   </article>
-  `
-  )
+`;
+
+const rowTalks = (talk, position) => {
+  const row = [];
+  row.push(position + 1);
+  row.push(talk.title);
+  if (options.withFormats) {
+    row.push(formats[talk.formats].name);
+  }
+  if (options.withCategories) {
+    row.push(categories[talk.categories].name);
+  }
+  row.push(talk.speakers.map((s) => speakers[s].displayName).join("<br />"));
+  if (options.withCompanies) {
+    row.push(
+      talk.speakers.map((s) => speakers[s].company ?? "").join("<br />")
+    );
+  }
+  if (options.withAddresses) {
+    row.push(
+      talk.speakers
+        .map((s) => speakers[s].address?.formattedAddress ?? "")
+        .join("<br />")
+    );
+  }
+  if (options.withLanguages) {
+    row.push(talk.language ?? "");
+  }
+  row.push(Number(Number(talk.rating ?? "0").toFixed(2)));
+  row.push(talk.loves);
+  row.push(talk.hates);
+  return `<tr class="talk" data-categories=" ${
+    talk.categories
+  } " data-formats=" ${talk.formats} " data-speakers=" ${talk.speakers.join(
+    " "
+  )} " data-companies=" ${talk.speakers
+    .map((s) => slugify(speakers[s].company ?? ""))
+    .join(" ")} "><td>${row.join("</td><td>")}</td></tr>`;
+};
+
+const htmlTalks = exportJSON.talks
+  .sort((a, b) => (a.rating <= b.rating ? 1 : -1))
+  .map((talk, i) => (options.compact ? rowTalks(talk, i) : joliTalk(talk)))
   .join("");
 
+let htmlTalksHeader = "";
+if (options.compact) {
+  const row = [];
+  row.push("position");
+  row.push("title");
+  if (options.withFormats) {
+    row.push("formats");
+  }
+  if (options.withCategories) {
+    row.push("categories");
+  }
+  row.push("speakers");
+  if (options.withCompanies) {
+    row.push("companies");
+  }
+  if (options.withAddresses) {
+    row.push("addresses");
+  }
+  if (options.withLanguages) {
+    row.push("languages");
+  }
+  row.push("rating");
+  row.push("loves");
+  row.push("hates");
+  htmlTalksHeader = `<thead><tr><th>${row.join("</td><td>")}</th></tr></thead>`;
+}
+
+document.getElementById("talks").innerHTML = options.compact
+  ? `<table>${htmlTalksHeader}<tbody>${htmlTalks}</tbody></table>`
+  : htmlTalks;
+
 window.filterTalks = () => {
-  const articles = document.querySelectorAll("article");
+  const articles = document.querySelectorAll(".talk");
   articles.forEach((article) => {
     article.classList.remove("hidden");
   });

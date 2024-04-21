@@ -7,6 +7,10 @@ header a {
   float: right;
 }
 
+h3 {
+  margin-bottom: 0;
+}
+
 footer {
   display: flex;
   align-items: center;
@@ -44,7 +48,7 @@ footer {
   }
 }
 
-.talk {
+.info {
   display: flex;
   flex-direction: row;
   align-items: stretch;
