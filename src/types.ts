@@ -53,4 +53,12 @@ export type Options = {
   render: boolean;
   links?: string;
   export?: string;
+  useApi: boolean;
 };
+
+export type Export = {
+  talks?: object[];
+  speakers?: object[];
+  formats?: object[];
+  categories?:object[];
+}

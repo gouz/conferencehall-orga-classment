@@ -1,6 +1,7 @@
 import { DTO, DTOExport } from "./DTO";
 import render from "./render";
 import type {
+  Export,
   Format,
   Options,
   Speaker,
@@ -8,9 +9,20 @@ import type {
   Talk,
   TalkRow,
 } from "./types";
+import { question } from "./utils";
 
 const choc = async (file: string, options: Options) => {
-  const json = await Bun.file(file).json();
+  let json: Export = {};
+  if (options.useApi) {
+    const eventId = await question("Your event ID: ");
+    const apiKey = await question("Your API key: ");
+    const response = await fetch(
+      `https://conference-hall.io/api/v1/event/${eventId}?key=${apiKey}`
+    );
+    json = await response.json();
+  } else {
+    json = await Bun.file(file).json();
+  }
   if (options.render) {
     render(json, options);
   } else {

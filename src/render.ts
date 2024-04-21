@@ -1,9 +1,9 @@
 import html from "./render/index.html.txt";
 import js from "./render/main.js.txt";
 import css from "./render/main.css.txt";
-import type { Options } from "./types";
+import type { Export, Options } from "./types";
 
-export const render = (json: JSON, options?: Options) => {
+export const render = (json: Export, options?: Options) => {
   const server = Bun.serve({
     port: 1337,
     async fetch(req) {
