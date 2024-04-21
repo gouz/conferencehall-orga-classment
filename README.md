@@ -17,6 +17,7 @@ xcode-select --install
 ```
 
 Then install the main package
+
 ```
 brew install gouz/tools/choc
 ```
@@ -39,7 +40,7 @@ Usage: choc [options] <json>
 ConferenceHall organization companion
 
 Arguments:
-  json                     the json export file
+  json                     the json export file from Conference Hall
 
 Options:
   -v, --version            output the version number
@@ -52,6 +53,7 @@ Options:
   -w, --links <eventId>    view links
   -x, --export <file>      export into tsv file
   -r, --render             render on a webpage (default: false)
+  -p, --compact            compact render on a webpage (default: false)
   -h, --help               display help for command
 ```
 
@@ -71,7 +73,7 @@ choc -fce export.json
 
 ![alt text](assets/options.png)
 
-### Export to a tsv file 
+### Export to a tsv file
 
 Then you can import it into a spreadsheet
 
@@ -94,4 +96,3 @@ You need to write your event id, present in the URL in conference-hall.io .
 ```
 choc export.json -rw 688i5iout
 ```
-
