@@ -62,7 +62,7 @@ const formats = datas.formats.reduce(
 
 ["categories", "formats", "speakers", "companies"].forEach((key) => {
   document.getElementById(key).innerHTML = [
-    "<option></option>",
+    `<option value="">All ${key}</option>`,
     Object.values(
       datas[key].reduce((acc, obj) => ({ ...acc, [obj.id]: obj }), {})
     )
