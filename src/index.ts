@@ -29,4 +29,6 @@ program
   .option("-r, --render", "render on a webpage", false)
   .action(choc);
 
+program.showHelpAfterError();
+
 program.parse();
