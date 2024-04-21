@@ -27,6 +27,7 @@ program
   .option("-w, --links <eventId>", "view links")
   .option("-x, --export <file>", "export into tsv file")
   .option("-r, --render", "render on a webpage", false)
+  .option("-p, --compact", "compact render on a webpage", false)
   .action(choc);
 
 program.showHelpAfterError();
