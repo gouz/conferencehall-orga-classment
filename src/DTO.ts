@@ -1,6 +1,34 @@
 import type { Options, SpeakerData, Talk, TalkRow } from "./types";
 import { removeEmojis, splitString } from "./utils";
 
+const getCompanies = (speakerHash: Map<string, SpeakerData>, uid: string) => ({
+  company: speakerHash.get(uid)?.company,
+});
+
+const getAdresses = (speakerHash: Map<string, SpeakerData>, uid: string) => ({
+  addresses: speakerHash.get(uid)?.address,
+});
+
+const getFormats = (
+  formatsHash: Map<string, string>,
+  format: string,
+  removeEmoji: boolean = false
+) => ({
+  format: removeEmoji
+    ? removeEmojis(formatsHash.get(format))
+    : formatsHash.get(format),
+});
+
+const getCategories = (
+  categoriesHash: Map<string, string>,
+  category: string,
+  removeEmoji: boolean = false
+) => ({
+  categories: removeEmoji
+    ? removeEmojis(categoriesHash.get(category))
+    : categoriesHash.get(category),
+});
+
 export const DTO = (
   talks: Talk[],
   options: Options,
@@ -29,61 +57,35 @@ export const DTO = (
         options.titlelength
       ).map((text) => text.padEnd(options.titlelength, " "));
       speakers.forEach((uid: string, i: number) => {
-        let addCompanies = {};
-        if (options.withCompanies)
-          addCompanies = {
-            company: speakerHash.get(uid)?.company,
-          };
-        let addAddresses = {};
-        if (options.withAddresses)
-          addAddresses = {
-            addresses: speakerHash.get(uid)?.address,
-          };
         if (i === 0) {
-          const line = {
+          lines.push({
             position: position + 1,
             title: titleSplit.shift(),
-          };
-          let addFormats = {};
-          if (options.withFormats)
-            addFormats = {
-              format: removeEmojis(formatsHash.get(formats)),
-            };
-          let addCategories = {};
-          if (options.withCategories)
-            addCategories = {
-              categories: removeEmojis(categoriesHash.get(categories)),
-            };
-          let addLanguages = {};
-          if (options.withLanguages)
-            addLanguages = {
-              language: language,
-            };
-          let addLink = {};
-          if (options.links) {
-            addLink = {
-              link: `https://conference-hall.io/organizer/event/${options.links}/proposals/${id}`,
-            };
-          }
-          lines.push({
-            ...line,
-            ...addFormats,
-            ...addCategories,
+            ...(options.withFormats
+              ? getFormats(formatsHash, formats, true)
+              : {}),
+            ...(options.withCategories
+              ? getCategories(categoriesHash, categories, true)
+              : {}),
             speakers: speakerHash.get(uid)?.name,
-            ...addCompanies,
-            ...addAddresses,
-            ...addLanguages,
+            ...(options.withCompanies ? getCompanies(speakerHash, uid) : {}),
+            ...(options.withAddresses ? getAdresses(speakerHash, uid) : {}),
+            ...(options.withLanguages ? { language } : {}),
             rating: Number(Number(rating ?? "0").toFixed(2)),
             loves,
             hates,
-            ...addLink,
+            ...(options.links
+              ? {
+                  link: `https://conference-hall.io/organizer/event/${options.links}/proposals/${id}`,
+                }
+              : {}),
           });
         } else
           lines.push({
             title: titleSplit.shift() ?? "",
             speakers: speakerHash.get(uid)?.name,
-            ...addCompanies,
-            ...addAddresses,
+            ...(options.withCompanies ? getCompanies(speakerHash, uid) : {}),
+            ...(options.withAddresses ? getAdresses(speakerHash, uid) : {}),
           });
       });
       titleSplit.forEach((title) => lines.push({ title }));
@@ -94,8 +96,8 @@ export const DTO = (
 
 const cleanArray = (arrayString: (string | undefined)[]): string[] =>
   Array.from(
-    new Set(arrayString.map((c) => c?.toLowerCase() || "").filter((c) => c))
-  ).sort();
+    new Set(arrayString.map((c) => c?.toLowerCase() ?? "").filter((c) => c))
+  ).sort((a, b) => a.localeCompare(b));
 
 export const DTOExport = (
   talks: Talk[],
@@ -118,60 +120,38 @@ export const DTOExport = (
         id,
       },
       position: number
-    ) => {
-      const line = {
-        position: position + 1,
-        title: title,
-      };
-      let addFormats = {};
-      if (options.withFormats)
-        addFormats = {
-          format: formatsHash.get(formats),
-        };
-      let addCategories = {};
-      if (options.withCategories)
-        addCategories = {
-          categories: categoriesHash.get(categories),
-        };
-      let addLanguages = {};
-      if (options.withLanguages)
-        addLanguages = {
-          language: language,
-        };
-      let addCompanies = {};
-      if (options.withCompanies)
-        addCompanies = {
-          company: cleanArray(
-            speakers.map((uid: string) => speakerHash.get(uid)?.company)
-          ).join(", "),
-        };
-      let addAddresses = {};
-      if (options.withAddresses)
-        addAddresses = {
-          address: cleanArray(
-            speakers.map((uid: string) => speakerHash.get(uid)?.address)
-          ),
-        };
-      let addLink = {};
-      if (options.links) {
-        addLink = {
-          link: `https://conference-hall.io/organizer/event/${options.links}/proposals/${id}`,
-        };
-      }
-      return {
-        ...line,
-        ...addFormats,
-        ...addCategories,
-        speakers: speakers
-          .map((uid: string) => speakerHash.get(uid)?.name)
-          .join(", "),
-        ...addCompanies,
-        ...addAddresses,
-        ...addLanguages,
-        rating: Number(Number(rating ?? "0").toFixed(2)),
-        loves,
-        hates,
-        ...addLink,
-      };
-    }
+    ) => ({
+      position: position + 1,
+      title: title,
+      ...(options.withFormats ? getFormats(formatsHash, formats) : {}),
+      ...(options.withCategories
+        ? getCategories(categoriesHash, categories)
+        : {}),
+      speakers: speakers
+        .map((uid: string) => speakerHash.get(uid)?.name)
+        .join(", "),
+      ...(options.withCompanies
+        ? {
+            company: cleanArray(
+              speakers.map((uid: string) => speakerHash.get(uid)?.company)
+            ).join(", "),
+          }
+        : {}),
+      ...(options.withAddresses
+        ? {
+            address: cleanArray(
+              speakers.map((uid: string) => speakerHash.get(uid)?.address)
+            ),
+          }
+        : {}),
+      ...(options.withLanguages ? { language } : {}),
+      rating: Number(Number(rating ?? "0").toFixed(2)),
+      loves,
+      hates,
+      ...(options.links
+        ? {
+            link: `https://conference-hall.io/organizer/event/${options.links}/proposals/${id}`,
+          }
+        : {}),
+    })
   );
