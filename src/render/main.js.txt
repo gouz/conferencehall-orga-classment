@@ -119,9 +119,9 @@ const joliTalk = (talk) => `
   </article>
 `;
 
-const rowTalks = (talk, position) => {
+const rowTalks = (talk) => {
   const row = [];
-  row.push(position + 1);
+  row.push(talk.position);
   row.push(talk.title);
   if (options.withFormats) {
     row.push(formats[talk.formats].name);
@@ -159,7 +159,8 @@ const rowTalks = (talk, position) => {
 
 const htmlTalks = exportJSON.talks
   .sort((a, b) => (a.rating <= b.rating ? 1 : -1))
-  .map((talk, i) => (options.compact ? rowTalks(talk, i) : joliTalk(talk)))
+  .map((talk, i) => ({ ...talk, position: i + 1 }))
+  .map((talk) => (options.compact ? rowTalks(talk) : joliTalk(talk)))
   .join("");
 
 let htmlTalksHeader = "";
@@ -186,12 +187,25 @@ if (options.compact) {
   row.push("rating");
   row.push("loves");
   row.push("hates");
-  htmlTalksHeader = `<thead><tr><th>${row.join("</td><td>")}</th></tr></thead>`;
+  htmlTalksHeader = `<thead><tr>${row
+    .map((r) => `<th onclick="window.sortCol('${r}')">${r}</th>`)
+    .join("")}</tr></thead>`;
 }
 
 document.getElementById("talks").innerHTML = options.compact
   ? `<table>${htmlTalksHeader}<tbody>${htmlTalks}</tbody></table>`
   : htmlTalks;
+
+window.sortCol = (colName) => {
+  document.getElementById(
+    "talks"
+  ).innerHTML = `<table>${htmlTalksHeader}<tbody>${exportJSON.talks
+    .sort((a, b) => (a.rating <= b.rating ? 1 : -1))
+    .map((talk, i) => ({ ...talk, position: i + 1 }))
+    .sort((a, b) => (a[colName] <= b[colName] ? 1 : -1))
+    .map(rowTalks)
+    .join("")}</tbody></table>`;
+};
 
 window.filterTalks = () => {
   const articles = document.querySelectorAll(".talk");
