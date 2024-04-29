@@ -96,3 +96,15 @@ You need to write your event id, present in the URL in conference-hall.io .
 ```
 choc export.json -rw 688i5iout
 ```
+
+### Organizer most popular command
+
+```
+choc export.json -flecarpw 688i5iout
+```
+
+or (without links)
+
+```
+choc export.json -flecarp
+```
