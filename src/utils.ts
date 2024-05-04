@@ -16,7 +16,3 @@ export const splitString = (str: string, n: number): string[] => {
   }
   return result;
 };
-
-export const removeEmojis = (str: string | undefined): string => {
-  return str?.replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "").trim() ?? "";
-};

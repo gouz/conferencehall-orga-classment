@@ -1,5 +1,5 @@
 import type { Options, SpeakerData, Talk, TalkRow } from "./types";
-import { removeEmojis, splitString } from "./utils";
+import { splitString } from "./utils";
 
 const getCompanies = (speakerHash: Map<string, SpeakerData>, uid: string) => ({
   company: speakerHash.get(uid)?.company,
@@ -9,24 +9,15 @@ const getAdresses = (speakerHash: Map<string, SpeakerData>, uid: string) => ({
   addresses: speakerHash.get(uid)?.address,
 });
 
-const getFormats = (
-  formatsHash: Map<string, string>,
-  format: string,
-  removeEmoji: boolean = false
-) => ({
-  format: removeEmoji
-    ? removeEmojis(formatsHash.get(format))
-    : formatsHash.get(format),
+const getFormats = (formatsHash: Map<string, string>, format: string) => ({
+  format: formatsHash.get(format),
 });
 
 const getCategories = (
   categoriesHash: Map<string, string>,
-  category: string,
-  removeEmoji: boolean = false
+  category: string
 ) => ({
-  categories: removeEmoji
-    ? removeEmojis(categoriesHash.get(category))
-    : categoriesHash.get(category),
+  categories: categoriesHash.get(category),
 });
 
 export const DTO = (
@@ -52,20 +43,17 @@ export const DTO = (
       position: number
     ) => {
       const lines: TalkRow[] = [];
-      let titleSplit: string[] = splitString(
-        removeEmojis(title),
-        options.titlelength
-      ).map((text) => text.padEnd(options.titlelength, " "));
+      let titleSplit: string[] = splitString(title, options.titlelength).map(
+        (text) => text.padEnd(options.titlelength, " ")
+      );
       speakers.forEach((uid: string, i: number) => {
         if (i === 0) {
           lines.push({
             position: position + 1,
             title: titleSplit.shift(),
-            ...(options.withFormats
-              ? getFormats(formatsHash, formats, true)
-              : {}),
+            ...(options.withFormats ? getFormats(formatsHash, formats) : {}),
             ...(options.withCategories
-              ? getCategories(categoriesHash, categories, true)
+              ? getCategories(categoriesHash, categories)
               : {}),
             speakers: speakerHash.get(uid)?.name,
             ...(options.withCompanies ? getCompanies(speakerHash, uid) : {}),
